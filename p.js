@@ -1,50 +1,83 @@
-/* You must use CSS classes for toggling styles, adding or removing classes to change the style. 
-You are not permitted to manually apply styles to elements with JavaScript. 
+class ParagraphChanger{
+    constructor(paraElem){
+        this.paragraph= paraElem;
 
-You must use addEventListener for all your event handling
+        //button_container div
+        this.div = document.createElement('div');
+        this.div.id = 'button_container';
+        this.paragraph.parentNode.insertBefore(this.div,this.paragraph);
 
-CSS
-Create a separate CSS file that handles the styling for the page.
+        //toggle buttons
+        this.div.innerHTML= "<button id='button1'><a href='#'> Toggle Bold</a></button> <button class='button2'><a href='#'> Toggle width</a></button> <button class='button3'><a href='#'> Toggle Color</a></button> <button class='button4'><a href='#'> Toggle Font size</a></button>";
+       
+    }
+    event(){
+        //eventListeners
+        this.previous={};      //object to store original paragraph styles          
 
-Style the buttons so that they sit horizontally inside their container. 
-The four buttons together should take up the full width of the container and each button should be the same width.
+        this.reset=function Reset(){                              //store original paragraph style in the previous object  
+            this.paragraph.style.color=this.previous.color;
+            this.paragraph.style.width=this.previous.width;
+            this.paragraph.style.fontSize=this.previous.fontSize;
+            this.paragraph.style.fontWeight=this.previous.fontWeight;                                              
+        }
 
-Include a 1px black border around button container, and 10px of padding.
+        document.querySelectorAll('button').forEach(button =>{    //Reference Stack overflow help (https://stackoverflow.com/questions/9329446/loop-for-each-over-an-array-in-javascript/9329476#9329476). For each button add event listner, which also calls the reset function
+            button.addEventListener("click",()=>{
+                this.reset();
+            });
+        });
+        
 
-There must be a 10px gap between each of the buttons.
+        this.toggleBold= function(){                                  //the functions set original style to previous and add requested styles
+            this.previous.fontWeight=this.paragraph.style.fontWeight;
+            this.paragraph.style.fontWeight ='bold';   
+        }
 
-The paragraph must have a 3px border of ​#ff2800​ (​Ferrari Red)​ and 15px of padding.*/
+        this.toggleColor= function() {
+            this.previous.color=this.paragraph.style.color;
+            this.paragraph.style.color = 'red';
+        }
+
+        this.toggleWidth= function() {
+           this.previous.width=this.paragraph.style.width;
+            this.paragraph.style.width ='50%';
+        }
+        
+
+        this.toggleFontSize= function() {
+            this.previous.fontSize=this.paragraph.style.fontSize;
+            this.paragraph.style.fontSize = '50%';
+        }
+
+        
+
+        for(let i=0; i<document.body.firstElementChild.childNodes.length;i++){
+
+            this.node=document.body.firstElementChild.childNodes[i];
+            
+            if(this.node.innerHTML == '<a href="#"> Toggle Bold</a>'){
+               //this.node.onclick = () => this.toggleBold();
+                //this.node.addEventListener("click",this.toggleBold(),once);
+            }
+
+            if(this.node.innerHTML == '<a href="#"> Toggle width</a>'){
+                this.node.onclick = () => this.toggleWidth();
+                //this.node.addEventListener("click",this.toggleWidth());
+            }
 
 
+            if(this.node.innerHTML == '<a href="#"> Toggle Color</a>'){
+                this.node.onclick = () => this.toggleColor();
+            }
 
+            if(this.node.innerHTML == '<a href="#"> Toggle Font size</a>'){
+                this.node.onclick = () => this.toggleFontSize();
+            }
 
-button{
-    display: inline;
-    padding-right: 10px;
+        }
+    } 
 }
 
-.button_container{
-    border: 1px solid #000;
-    padding: 10px;
-}
-
-p{
-    border: 3px solid #ff2800;
-    padding: 15px;
-}
-
-.button1{
-    display: bold;
-}
-
-.button2{
-    width: 50%;
-}
-
-.button3{
-    color: #ff2800;
-}
-
-.button4{
-    font-size: 12px;
-}
+let para = new ParagraphChanger(document.getElementById('target_p'));
+para.event();
